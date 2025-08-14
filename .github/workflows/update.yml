@@ -2,35 +2,37 @@ name: Actualizar GeoJSON desde Google Sheets
 
 on:
   schedule:
-    - cron: '0 * * * *'  # Cada hora
-  workflow_dispatch:     # También se puede ejecutar manualmente
+    - cron: '0 * * * *'   # cada hora (UTC)
+  workflow_dispatch:       # correr manualmente
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Clonar el repositorio
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Configurar Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       - name: Instalar dependencias
-        run: pip install pandas geopandas shapely pyproj fiona
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas geopandas shapely pyproj fiona
 
-      - name: Ejecutar script para actualizar GeoJSON
+      - name: Generar GeoJSON
         run: python update_geojson.py
 
-      - name: Configurar git para hacer commit
+      - name: Commit & push si hay cambios
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-
-      - name: Hacer commit y push del GeoJSON
-        run: |
           git add docs/sistemas_sitada_lambert.geojson
           git commit -m "Actualizar GeoJSON automático" || echo "Sin cambios para commitear"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
+          git push
+
 
