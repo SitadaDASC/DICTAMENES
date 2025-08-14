@@ -48,6 +48,6 @@ gdf = gpd.GeoDataFrame(
 ).to_crs(4326)
 
 # Salida para GitHub Pages
-gdf.to_file("docs/sistemas_sitada_lambert.geojson", driver="GeoJSON")
+gdf.to_file("docs/dictamenes.geojson", driver="GeoJSON")
 print(f"OK: {len(gdf)} features generadas")
 
