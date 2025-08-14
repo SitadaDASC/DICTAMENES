@@ -31,7 +31,7 @@ jobs:
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git add docs/sistemas_sitada_lambert.geojson
+          git add docs/dictamenes.geojson
           git commit -m "Actualizar GeoJSON automático" || echo "Sin cambios para commitear"
           git push
 
